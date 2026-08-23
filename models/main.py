@@ -40,11 +40,11 @@ if __name__ == "__main__":
     data_dir =  r"D:\Projects\slab-allocation-system\intelligent-slab-allocation-system\data"
 
     #slab_file = os.path.join(data_dir, "slab_inventory_input.xlsx")
-    slab_file_dir = os.path.join(data_dir, "slab_inventory_input_s30_p50.json")
-    #slab_file_dir = os.path.join(data_dir, "slab_inventory_input_s40_p80.json")
+    #slab_file_dir = os.path.join(data_dir, "slab_inventory_input_s30_p50.json")
+    slab_file_dir = os.path.join(data_dir, "slab_inventory_input_s40_p80.json")
     #order_file = os.path.join(data_dir, "orders_input.xlsx")
-    order_file_dir = os.path.join(data_dir, "orders_input_s30_p50.json")
-    #order_file_dir = os.path.join(data_dir, "orders_input_s40_p80.json")
+    #order_file_dir = os.path.join(data_dir, "orders_input_s30_p50.json")
+    order_file_dir = os.path.join(data_dir, "orders_input_s40_p80.json")
 
     # can be "greedy" (or "heuristic") or "SCIP" (or "MIP")
     allocation_algorithm_type = "SCIP"

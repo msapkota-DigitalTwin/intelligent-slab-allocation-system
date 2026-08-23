@@ -16,7 +16,7 @@
         "yield_loss": 6.184779980657647,
         "slab_utilisation": 96.92299503449867,
         "order_fulfilment": 0.7333333333333333,
-        "runtime_seconds": 0.727406099998916
+        "runtime_seconds": 0.7869009999994887
     },
     "allocations": [
         {
