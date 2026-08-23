@@ -19,6 +19,10 @@ Both approaches use the same data model, feasibility checks and KPI calculations
 
 A customer order may contain one or more plates. Each plate must be allocated to a compatible slab.
 
+For each feasible slab/plate combination, the required slab length is
+estimated. Here I am using plate volume and the effective slab cross-sectional
+capacity (just a hypothetical assumption) for the calculation. 
+
 For a plate \(p\) and slab \(s\), the required slab length is calculated as:
 
 ```math
@@ -26,13 +30,27 @@ L_{p,s} =
 \text{calculate\_required\_length}(s,p)
 
 ```
+
+The above calculation uses a configurable slab cross-section constant:
+
+```python
+SLAB_CROSS_SECTION_CONSTANT = 0.04
+```
+and a grade-dependent yield factor. In this hypothetical implementation, its assumed that:
+
+- G1 uses a yield factor of 0.94;
+- G2 uses a yield factor of 0.88.
+
+
 A plate can only be allocated when:
 
 - the slab is compatible with the plate/order;
 - sufficient slab length is available;
 - inventory restrictions are satisfied.
 
-The optimisation decision variable is:
+Then allocation algorithm will be performed.
+
+While formulating the allocation problem as optimisation problem, the optimisation related decision variable will be:
 
 ```math
 x_{p,s} \in \{0,1\}
@@ -45,9 +63,20 @@ The slab capacity constraint is:
 \sum_p L_{p,s}x_{p,s} \leq L_s
 ```
 
-For orders requiring full fulfilment, all plates in the order must be allocated.
+For orders requiring full fulfilment, all plates in the order must be
+allocated. A binary variable \(y_o\) is introduced here to indicate whether order \(o\) is fully fulfilled.
 
-The optimisation objective balances order fulfilment and yield-loss minimisation:
+```math
+y_o =
+\begin{cases}
+1, & \text{if all plates in order }o\text{ are allocated} \\
+0, & \text{otherwise}
+\end{cases}
+```
+
+No partial fulfillment is allowrd, i.e.,, either all plates belonging to the order must be allocated or none..
+
+For the optimisation problem, the objective function is formulated in a way it balances order fulfilment and yield-loss minimisation:
 
 ```math
 \max(w_f * F - w_y* Y)
@@ -60,14 +89,14 @@ where:
 - \(w_f\) = order fulfilment weight;
 - \(w_y\) = yield-loss minimisation weight.
 
-The default weights are:
+The user can choose this value, while the default weights are:
 
 ```python
 order_fulfilment_weight = 0.4
 yield_loss_minimisation_weight = 0.6
 ```
 
-For orders requiring full fulfilment, all plates belonging to the order must be allocated for the order to be considered fulfilled.
+
 
 The optimisation objective balances:
 
@@ -80,7 +109,7 @@ The two objective components are normalised and combined using user-defined weig
 
 ## 3. Assumptions
 
-The following assumptions apply where the problem statement does not specify implementation details:
+The following assumptions apply for the allocation phase:
 
 - A slab can be allocated to multiple plates, provided that the total required length does not exceed its available length.
 - Unused length from an opened slab is counted as yield loss.
@@ -164,7 +193,7 @@ Before allocation, each plate is checked against available slabs. The system ide
 - Slabs with sufficient individual length
 - Initially infeasible plates
 
-This prevents infeasible plate/slab combinations from entering the optimisation model.
+This prevents infeasible plate/slab combinations from entering the optimisation  phase.
 
 Typical initial infeasibility reasons include:
 
@@ -231,9 +260,10 @@ The same key performance indicators (KPIs) are calculated for both allocation al
 
 ### Yield-Loss Calculation
 
-\[
+```math
 \text{Yield Loss} = \text{Total Slab Length Used} - \text{Material Consumption}
-\]
+\text{Yield Loss Ratio} = \text{Yield Loss}/\text{Total Slab Length Used} 
+```
 
 This provides a consistent basis for comparing the Greedy and SCIP approaches.
 
@@ -269,25 +299,25 @@ Loads Excel and JSON input data and converts records into the system data object
 
 #### `models_and_kpis.py`
 
-Contains the core data models and common KPI calculations.
+Contains the core data models, common KPI calculations and few checks like:
+- Compatibility checks
+- Feasibility analysis
 
 #### `allocations_algorithms.py`
 
 Contains:
-
-- Compatibility checks
-- Feasibility analysis
 - Greedy allocation
 - SCIP optimisation
 - Post-allocation diagnosis
 
 #### `main.py`
 
-Provides the application entry point, including:
+Includes:
 
 - Algorithm selection
 - Objective-weight configuration
-- KPI reporting
+- allocation algorithm running.
+- KPIs reporting
 - JSON output generation
 
 ---
@@ -382,8 +412,7 @@ The allocation engine can be deployed as a Python service between an order/inven
 
 ```text
 Order / Inventory System
-          ↓
-    Allocation Service
+
           ↓
    Feasibility Analysis
           ↓
@@ -394,19 +423,19 @@ Order / Inventory System
  Recommended Allocation
 ```
 
-For production deployment, package the Python environment and SCIP configuration reproducibly.
-
+For production deployment, the Python environment and SCIP configuration can be bundled into a standalone .exe file using PyInstaller. From there, we can choose between a file based input output interface or a lightweight Tkinter GUI, depending on what works best for the operational setup.
 ### Configurable Parameters
 
 The following operational parameters should remain configurable:
 
 - Allocation algorithm
 - Objective weights
+- Slab length calculation
 - Solver time limit
 - Input locations
 - Output locations
 
-### Monitoring
+### Monitoring modules
 
 Recommended production metrics include:
 
@@ -423,6 +452,22 @@ Infeasibility analysis can identify recurring inventory or compatibility problem
 
 - `No compatible slab`
 - `Insufficient slab length`
-- `Insufficient available slab length`
+- `Insufficient available slab length
 
----
+
+### Technical and Data-Quality Monitoring
+
+The deployed system should also monitor input-data and numerical issues that
+could affect feasibility analysis or KPI calculations. Such as,
+
+- missing or invalid slab/order attributes;
+- incompatible slab and order/plate data types or formats;
+- unsupported steel grades or quality specifications;
+- orders containing zero plates;
+- zero or invalid slab dimensions;
+- zero denominators in KPI calculations;
+- invalid or missing objective weights;
+- optimisation models with no feasible solution;
+- solver errors or unexpected termination.
+
+

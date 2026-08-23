@@ -97,7 +97,7 @@ def is_compatible(slab, plate, order):
     return True, "Compatible"
 
 
-SLAB_CROSS_SECTION = 0.04  # m², assumed reference value
+SLAB_CROSS_SECTION_CONSTANT = 0.04  
 
 def calculate_required_length(slab, plate):
 
@@ -123,7 +123,7 @@ def calculate_required_length(slab, plate):
 
     required_length = (
         plate_volume /
-        (SLAB_CROSS_SECTION * yield_factor)
+        (SLAB_CROSS_SECTION_CONSTANT * yield_factor)
     )
 
     return required_length
