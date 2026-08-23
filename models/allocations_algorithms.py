@@ -8,7 +8,15 @@ from models_and_KPIS import  is_compatible, calculate_required_length
 
 def greedy_heuristic_allocate(slabs, orders):
     """
-    Perform greedy allocation of slabs to plates in orders.
+    Perform greedy best-fit allocation of slabs to plates.
+
+    Initial feasibility is checked before allocation. Plates
+    with no compatible or sufficiently long slab are excluded
+    from the allocation process.
+
+    The algorithm processes orders sequentially. All plates
+    belonging to an order must be allocated successfully before
+    the temporary allocations are committed.
 
     Returns
     -------
@@ -16,75 +24,183 @@ def greedy_heuristic_allocate(slabs, orders):
         Feasible slab-to-plate Allocation objects.
 
     unallocated_orders : dict
-        Orders that could not be fully allocated, together with the
-        reason for failure.
+        Orders that could not be fully allocated, together with
+        their failure reasons and affected plates.
     """
 
     allocations = []
+
+    # =========================================================
+    # Prepare plate list
+    # =========================================================
+
+    plates = [
+        plate
+        for order in orders
+        for plate in order.plates
+    ]
+
+    # =========================================================
+    # Initial feasibility screening
+    # =========================================================
+    #
+    # This identifies:
+    #
+    #   1. Plates with no compatible slab
+    #   2. Plates for which compatible slabs exist but none
+    #      has sufficient original length
+    #
+    # It also creates:
+    #
+    #   feasible_pairs
+    #   required_lengths
+    #
+    # which are reused by the Greedy algorithm.
+    # =========================================================
+
+    (
+        initially_unallocatable,
+        feasible_pairs,
+        required_lengths
+    ) = identify_initial_infeasibility(
+        slabs,
+        orders,
+        plates
+    )
+
+    # =========================================================
+    # Store slabs by ID for fast lookup
+    # =========================================================
+
+    slab_by_id = {
+        slab.slab_id: slab
+        for slab in slabs
+    }
+
+    # =========================================================
+    # Store unallocated orders
+    # =========================================================
+
     unallocated_orders = {}
 
+    # =========================================================
     # Process orders sequentially
+    # =========================================================
+
     for order in orders:
 
+        # -----------------------------------------------------
+        # Check whether the order contains a plate that failed
+        # the initial feasibility screening.
+        #
+        # Because the current problem assumes full order
+        # fulfilment, the complete order must be rejected.
+        # -----------------------------------------------------
+
+        initially_failed_plates = [
+            plate.plate_id
+            for plate in order.plates
+            if plate.plate_id in initially_unallocatable
+        ]
+
+        if initially_failed_plates:
+
+            unallocated_orders[
+                order.order_id
+            ] = {
+                "reason": "Initial feasibility failure",
+
+                "affected_plates": {
+                    plate_id:
+                        initially_unallocatable[plate_id]
+                    for plate_id in initially_failed_plates
+                }
+            }
+
+            continue
+
+        # -----------------------------------------------------
         # Temporary allocations for the current order.
-        # These are committed only if the complete order can be fulfilled.
+        #
+        # These allocations are committed only if every plate
+        # in the order can be allocated.
+        # -----------------------------------------------------
+
         temporary_allocations = []
 
-        # Process plates within the current order
+        order_failed = False
+        failed_plates = []
+
+        # =====================================================
+        # Process plates within the order
+        # =====================================================
+
         for plate in order.plates:
+
+            plate_id = plate.plate_id
 
             feasible_candidates = []
 
-            # Examine all slabs as potential candidates
-            for slab in slabs:
+            # -------------------------------------------------
+            # Only examine slabs that passed the initial
+            # feasibility screening for this plate.
+            # -------------------------------------------------
 
-                # Check grade, quality, customer restrictions,
-                # and inventory status.
-                compatible, _ = is_compatible(
-                    slab,
-                    plate,
-                    order
-                )
+            for slab_id in feasible_pairs[plate_id]:
 
-                if not compatible:
-                    continue
+                slab = slab_by_id[slab_id]
 
-                # Calculate material required from this slab
-                required_length = calculate_required_length(
-                    slab,
-                    plate
-                )
+                required_length = required_lengths[
+                    plate_id,
+                    slab_id
+                ]
 
-                # Material already committed to this slab
+                # -------------------------------------------------
+                # Material already committed to this slab by
+                # previously completed orders.
+                # -------------------------------------------------
+
                 committed_usage = sum(
                     allocation.required_length
                     for allocation in allocations
-                    if allocation.slab.slab_id == slab.slab_id
+                    if allocation.slab.slab_id == slab_id
                 )
 
+                # -------------------------------------------------
                 # Material temporarily assigned to this slab
-                # within the current order
+                # within the current order.
+                # -------------------------------------------------
+
                 temporary_usage = sum(
                     allocation.required_length
                     for allocation in temporary_allocations
-                    if allocation.slab.slab_id == slab.slab_id
+                    if allocation.slab.slab_id == slab_id
                 )
 
                 used_length = (
-                    committed_usage +
-                    temporary_usage
+                    committed_usage
+                    + temporary_usage
                 )
 
+                # -------------------------------------------------
                 # Remaining slab capacity
+                # -------------------------------------------------
+
                 remaining_capacity = (
-                    slab.length - used_length
+                    slab.length
+                    - used_length
                 )
 
-                # Check slab capacity constraint
+                # -------------------------------------------------
+                # Check whether the plate still fits on the
+                # remaining slab capacity.
+                # -------------------------------------------------
+
                 if required_length <= remaining_capacity:
 
                     remaining_after_allocation = (
-                        remaining_capacity - required_length
+                        remaining_capacity
+                        - required_length
                     )
 
                     feasible_candidates.append(
@@ -94,32 +210,37 @@ def greedy_heuristic_allocate(slabs, orders):
                         )
                     )
 
-            # -------------------------------------------------
-            # No feasible slab for this plate
-            # -------------------------------------------------
+            # =================================================
+            # No slab with sufficient remaining capacity
+            # =================================================
 
             if not feasible_candidates:
 
-                unallocated_orders[order.order_id] = (
-                    f"Could not allocate plate "
-                    f"{plate.plate_id}: "
-                    f"no compatible slab with sufficient "
-                    f"remaining capacity"
+                order_failed = True
+
+                failed_plates.append(
+                    plate_id
                 )
 
-                # Entire order must be rejected
-                temporary_allocations = []
+                # Since full order fulfilment is required,
+                # stop processing this order.
                 break
 
-            # -------------------------------------------------
-            # Best-fit greedy selection
-            # -------------------------------------------------
+            # =================================================
+            # Best-fit Greedy selection
+            # =================================================
+            #
+            # Select the slab that leaves the smallest amount
+            # of unused capacity after allocating this plate.
+            # =================================================
 
             feasible_candidates.sort(
                 key=lambda candidate: candidate[0]
             )
 
-            _, selected_slab = feasible_candidates[0]
+            _, selected_slab = (
+                feasible_candidates[0]
+            )
 
             temporary_allocations.append(
                 Allocation(
@@ -129,17 +250,48 @@ def greedy_heuristic_allocate(slabs, orders):
                 )
             )
 
-        # -----------------------------------------------------
-        # Commit the order only if every plate was allocated
-        # -----------------------------------------------------
+        # =====================================================
+        # Order could not be fully allocated
+        # =====================================================
 
-        if len(temporary_allocations) == len(order.plates):
+        if order_failed:
 
-            allocations.extend(
-                temporary_allocations
-            )
+            unallocated_orders[
+                order.order_id
+            ] = {
+                "reason": (
+                    "Insufficient available "
+                    "slab length"
+                ),
 
-    return allocations, unallocated_orders
+                "affected_plates": failed_plates
+            }
+
+            # -------------------------------------------------
+            # Discard all temporary allocations belonging to
+            # this incomplete order.
+            # -------------------------------------------------
+
+            temporary_allocations = []
+
+            continue
+
+        # =====================================================
+        # Commit complete order
+        # =====================================================
+
+        allocations.extend(
+            temporary_allocations
+        )
+
+    # =========================================================
+    # Return final result
+    # =========================================================
+
+    return (
+        allocations,
+        unallocated_orders
+    )
 
 
 
@@ -183,7 +335,7 @@ def solve_allocation_with_scip(slabs,
     
     
     # Set verbosity level (e.g., 4 for detailed information)
-    opti_model.setIntParam('display/verblevel', 4)
+    #opti_model.setIntParam('display/verblevel', 4)
     
     # You can also set other parameters to customize the logging output
     opti_model.setIntParam('display/freq', 1)  # Display output at every node
@@ -222,44 +374,15 @@ def solve_allocation_with_scip(slabs,
     # repeatedly during optimisation.
     # =========================================================
 
-    required_lengths = {}
-    feasible_pairs = {}
-
-    for plate in plates:
-
-        plate_id = plate.plate_id
-        order = plate_to_order[plate_id]
-
-        feasible_pairs[plate_id] = []
-
-        for slab in slabs:
-
-            compatible, _ = is_compatible(
-                slab,
-                plate,
-                order
-            )
-
-            if not compatible:
-                continue
-
-            required_length = calculate_required_length(
-                slab,
-                plate
-            )
-
-            if required_length > slab.length:
-                continue
-
-            required_lengths[
-                plate_id,
-                slab.slab_id
-            ] = required_length
-
-            feasible_pairs[
-                plate_id
-            ].append(slab.slab_id)
-
+    (
+        initially_unallocatable,
+        feasible_pairs,
+        required_lengths
+    ) = identify_initial_infeasibility(
+        slabs,
+        orders,
+        plates
+    )
 
     # =========================================================
     # Check for plates with no feasible slab
@@ -443,6 +566,14 @@ def solve_allocation_with_scip(slabs,
     #       sum(length[s] * y[s])
     # =========================================================
 
+    for plate_id, slab_id in x:
+
+        opti_model.addCons(
+            x[plate_id, slab_id] <= y[slab_id],
+            name=f"Link_{plate_id}_{slab_id}"
+            )
+
+
     total_slab_length_used = quicksum(
         slab.length * y[slab.slab_id]
         for slab in slabs
@@ -544,13 +675,14 @@ def solve_allocation_with_scip(slabs,
     # The weights should sum to 1.
     # =========================================================
 
-    objective = (
+    objective = ( 
         fulfilment_weight * fulfilment_ratio
-        - yield_loss_weight * yield_loss_ratio
+        -yield_loss_weight * yield_loss_ratio
     )
 
     opti_model.setObjective(
         objective,
+        #total_yield_loss,
         "maximize"
     )
 
@@ -678,35 +810,19 @@ def solve_allocation_with_scip(slabs,
     # Step: Identify unfulfilled orders
     # =========================================================
 
-    scip_allocated_plate_ids = {
-        allocation.plate.plate_id
-        for allocation in scip_allocations
-    }
+    #scip_allocated_plate_ids = {
+    #    allocation.plate.plate_id
+    #    for allocation in scip_allocations
+    #}
 
-    scip_unallocated_orders = {}
-
-    for order in orders:
-
-        missing_plates = [
-            plate.plate_id
-            for plate in order.plates
-            if plate.plate_id not in scip_allocated_plate_ids
-        ]
-
-        if missing_plates:
-
-            scip_unallocated_orders[order.order_id] = (
-                f"Could not allocate plates: {missing_plates}"
-            )
-
-
-    print(
-        "Unallocated SCIP orders:",
-        scip_unallocated_orders
+    scip_unallocated_orders = identify_post_allocation_infeasibility(
+        orders,
+        initially_unallocatable,
+        scip_allocations
     )
 
 
-    return scip_allocations, scip_unallocated_orders, log_handler.progress_data
+    return scip_allocations, scip_unallocated_orders
 
 
 
@@ -738,4 +854,217 @@ class LogEventHandler(Eventhdlr):
             self.progress_data.append((node_id, obj_val, time_elapsed))
              # Print progress information
             print(f"Node {node_id}, Objective Value {obj_val}, Time Elapsed {time_elapsed}")
-                
+
+
+
+def identify_initial_infeasibility(
+    slabs,
+    orders,
+    plates
+):
+    """
+    Identify plates that have no feasible slab before
+    running the allocation algorithm.
+    """
+
+    initially_unallocatable = {}
+    feasible_pairs = {}
+    required_lengths = {}
+
+    plate_to_order = {
+        plate.plate_id: order
+        for order in orders
+        for plate in order.plates
+    }
+
+    for plate in plates:
+
+        plate_id = plate.plate_id
+        order = plate_to_order[plate_id]
+
+        feasible_pairs[plate_id] = []
+
+        has_compatible_slab = False
+
+        for slab in slabs:
+
+            compatible, _ = is_compatible(
+                slab,
+                plate,
+                order
+            )
+
+            if not compatible:
+                continue
+
+            has_compatible_slab = True
+
+            required_length = calculate_required_length(
+                slab,
+                plate
+            )
+
+            if required_length > slab.length:
+                continue
+
+            required_lengths[
+                plate_id,
+                slab.slab_id
+            ] = required_length
+
+            feasible_pairs[
+                plate_id
+            ].append(
+                slab.slab_id
+            )
+
+        if not has_compatible_slab:
+
+            initially_unallocatable[plate_id] = (
+                "No compatible slab"
+            )
+
+        elif not feasible_pairs[plate_id]:
+
+            initially_unallocatable[plate_id] = (
+                "Insufficient slab length"
+            )
+
+    return (
+        initially_unallocatable,
+        feasible_pairs,
+        required_lengths
+    )
+
+def identify_post_allocation_infeasibility(
+    orders,
+    initially_unallocatable,
+    allocations
+):
+    """
+    Identify orders that could not be fully fulfilled after
+    the allocation algorithm.
+
+    Initial feasibility failures are retained with their
+    plate-level reasons.
+
+    Plates that were initially feasible but remained
+    unallocated after the algorithm are classified as having
+    insufficient available slab length.
+
+    Because full order fulfilment is required, an order is
+    considered unallocated if one or more of its plates
+    remain unallocated.
+
+    Returns
+    -------
+    unallocated_orders : dict
+
+        Example:
+
+        {
+            "O004": {
+                "reason": "No compatible slab",
+                "affected_plates": ["P013"]
+            },
+
+            "O005": {
+                "reason": "Insufficient available slab length",
+                "affected_plates": ["P017"]
+            }
+        }
+    """
+
+    # =========================================================
+    # Identify successfully allocated plates
+    # =========================================================
+
+    allocated_plate_ids = {
+        allocation.plate.plate_id
+        for allocation in allocations
+    }
+
+    # =========================================================
+    # Identify all plates that remain unallocated
+    # =========================================================
+
+    unallocated_plate_reasons = dict(
+        initially_unallocatable
+    )
+
+    for order in orders:
+
+        for plate in order.plates:
+
+            plate_id = plate.plate_id
+
+            # Already allocated -> nothing to report
+            if plate_id in allocated_plate_ids:
+                continue
+
+            # Already identified during initial feasibility
+            if plate_id in initially_unallocatable:
+                continue
+
+            # Initially feasible, but not allocated
+            unallocated_plate_reasons[plate_id] = (
+                "Insufficient available slab length"
+            )
+
+    # =========================================================
+    # Convert plate-level information to order-level output
+    # =========================================================
+
+    unallocated_orders = {}
+
+    for order in orders:
+
+        affected_plates = []
+
+        plate_reasons = []
+
+        for plate in order.plates:
+
+            plate_id = plate.plate_id
+
+            if plate_id in unallocated_plate_reasons:
+
+                affected_plates.append(
+                    plate_id
+                )
+
+                plate_reasons.append(
+                    unallocated_plate_reasons[plate_id]
+                )
+
+        # -----------------------------------------------------
+        # If at least one plate is unallocated, the whole
+        # order is considered unallocated.
+        # -----------------------------------------------------
+
+        if affected_plates:
+
+            unique_reasons = set(
+                plate_reasons
+            )
+
+            if len(unique_reasons) == 1:
+
+                reason = next(
+                    iter(unique_reasons)
+                )
+
+            else:
+
+                reason = (
+                    "Multiple feasibility issues"
+                )
+
+            unallocated_orders[
+                order.order_id
+            ] = {
+                "reason": reason,
+                "affected_plates": affected_plates
+            }
+
+    return unallocated_orders

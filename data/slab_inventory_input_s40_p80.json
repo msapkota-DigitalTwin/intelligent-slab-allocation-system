@@ -1,0 +1,404 @@
+{
+    "slabs": [
+        {
+            "slab_id": "S001",
+            "length": 8,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S002",
+            "length": 9,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S003",
+            "length": 10,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S004",
+            "length": 11,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S005",
+            "length": 12,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S006",
+            "length": 13,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S007",
+            "length": 14,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S008",
+            "length": 15,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S009",
+            "length": 16,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Reserved",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S010",
+            "length": 12,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Incoming",
+            "available_from": "2026-08-25"
+        },
+        {
+            "slab_id": "S011",
+            "length": 8,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S012",
+            "length": 9,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S013",
+            "length": 10,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S014",
+            "length": 11,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S015",
+            "length": 12,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S016",
+            "length": 13,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S017",
+            "length": 14,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S018",
+            "length": 15,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S019",
+            "length": 16,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Reserved",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S020",
+            "length": 12,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Incoming",
+            "available_from": "2026-08-25"
+        },
+        {
+            "slab_id": "S021",
+            "length": 8,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S022",
+            "length": 9,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S023",
+            "length": 10,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S024",
+            "length": 11,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S025",
+            "length": 12,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S026",
+            "length": 13,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S027",
+            "length": 14,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S028",
+            "length": 15,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S029",
+            "length": 16,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Reserved",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S030",
+            "length": 12,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Incoming",
+            "available_from": "2026-08-25"
+        },
+        {
+            "slab_id": "S031",
+            "length": 8,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S032",
+            "length": 9,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S033",
+            "length": 10,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S034",
+            "length": 11,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S035",
+            "length": 12,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S036",
+            "length": 13,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S037",
+            "length": 14,
+            "grade": "G1",
+            "quality": "Q1",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S038",
+            "length": 15,
+            "grade": "G2",
+            "quality": "Q1",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Available",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S039",
+            "length": 16,
+            "grade": "G1",
+            "quality": "Q2",
+            "supplier": "SUP1",
+            "surface_class": "S1",
+            "status": "Reserved",
+            "available_from": "2026-08-22"
+        },
+        {
+            "slab_id": "S040",
+            "length": 12,
+            "grade": "G2",
+            "quality": "Q2",
+            "supplier": "SUP2",
+            "surface_class": "S2",
+            "status": "Incoming",
+            "available_from": "2026-08-25"
+        }
+    ]
+}

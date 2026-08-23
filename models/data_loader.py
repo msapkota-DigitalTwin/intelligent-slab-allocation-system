@@ -6,6 +6,8 @@ import json
 from models_and_KPIS import Slab, Plate, Order
 
 def slabs_from_records_dict(records):
+    #print(type(records))
+    #print(records[:2])
     return [
         Slab(
             slab_id=record["slab_id"],
@@ -140,11 +142,11 @@ def load_input_data(
     elif file_format == "json":
         with open(slab_path, "r") as slab_file:
             records_slab = json.load(slab_file)
-            slabs = slabs_from_records_dict(records_slab)
+            slabs = slabs_from_records_dict(records_slab["slabs"])
 
         with open(order_path, "r") as order_file:
             records_order = json.load(order_file)
-            orders = orders_from_records_dict(records_order)
+            orders = orders_from_records_dict(records_order["orders"])
 
     else:
         raise ValueError(

@@ -1,0 +1,270 @@
+{
+    "algorithm": "SCIP",
+    "input": {
+        "order_file": "D:\\Projects\\slab-allocation-system\\intelligent-slab-allocation-system\\data\\orders_input_s30_p50.json",
+        "slab_file": "D:\\Projects\\slab-allocation-system\\intelligent-slab-allocation-system\\data\\slab_inventory_input_s30_p50.json",
+        "number_of_orders": 15,
+        "number_of_plates": 50,
+        "number_of_slabs": 30
+    },
+    "objective_weights": {
+        "fulfilment": 0.4,
+        "yield_loss": 0.6
+    },
+    "kpis": {
+        "material_consumption": 194.81522001934235,
+        "yield_loss": 6.184779980657647,
+        "slab_utilisation": 96.92299503449867,
+        "order_fulfilment": 0.7333333333333333,
+        "runtime_seconds": 0.727406099998916
+    },
+    "allocations": [
+        {
+            "order_id": "O004",
+            "plate_id": "P013",
+            "slab_id": "S025",
+            "required_length": 3.1914893617021276
+        },
+        {
+            "order_id": "O004",
+            "plate_id": "P014",
+            "slab_id": "S003",
+            "required_length": 7.340425531914894
+        },
+        {
+            "order_id": "O004",
+            "plate_id": "P015",
+            "slab_id": "S017",
+            "required_length": 7.047872340425532
+        },
+        {
+            "order_id": "O006",
+            "plate_id": "P019",
+            "slab_id": "S019",
+            "required_length": 3.351063829787234
+        },
+        {
+            "order_id": "O006",
+            "plate_id": "P020",
+            "slab_id": "S019",
+            "required_length": 4.452127659574468
+        },
+        {
+            "order_id": "O006",
+            "plate_id": "P021",
+            "slab_id": "S020",
+            "required_length": 5.531914893617022
+        },
+        {
+            "order_id": "O007",
+            "plate_id": "P022",
+            "slab_id": "S019",
+            "required_length": 3.1914893617021276
+        },
+        {
+            "order_id": "O007",
+            "plate_id": "P023",
+            "slab_id": "S007",
+            "required_length": 8.457446808510639
+        },
+        {
+            "order_id": "O007",
+            "plate_id": "P024",
+            "slab_id": "S007",
+            "required_length": 3.5904255319148937
+        },
+        {
+            "order_id": "O008",
+            "plate_id": "P025",
+            "slab_id": "S022",
+            "required_length": 4.438920454545454
+        },
+        {
+            "order_id": "O008",
+            "plate_id": "P026",
+            "slab_id": "S022",
+            "required_length": 8.735795454545453
+        },
+        {
+            "order_id": "O008",
+            "plate_id": "P027",
+            "slab_id": "S010",
+            "required_length": 2.352272727272727
+        },
+        {
+            "order_id": "O009",
+            "plate_id": "P028",
+            "slab_id": "S015",
+            "required_length": 6.136363636363637
+        },
+        {
+            "order_id": "O009",
+            "plate_id": "P029",
+            "slab_id": "S013",
+            "required_length": 4.261363636363636
+        },
+        {
+            "order_id": "O009",
+            "plate_id": "P030",
+            "slab_id": "S013",
+            "required_length": 6.40625
+        },
+        {
+            "order_id": "O010",
+            "plate_id": "P031",
+            "slab_id": "S005",
+            "required_length": 5.74468085106383
+        },
+        {
+            "order_id": "O010",
+            "plate_id": "P032",
+            "slab_id": "S005",
+            "required_length": 5.074468085106383
+        },
+        {
+            "order_id": "O010",
+            "plate_id": "P033",
+            "slab_id": "S006",
+            "required_length": 7.0212765957446805
+        },
+        {
+            "order_id": "O011",
+            "plate_id": "P034",
+            "slab_id": "S023",
+            "required_length": 6.25
+        },
+        {
+            "order_id": "O011",
+            "plate_id": "P035",
+            "slab_id": "S023",
+            "required_length": 3.579545454545454
+        },
+        {
+            "order_id": "O011",
+            "plate_id": "P036",
+            "slab_id": "S015",
+            "required_length": 5.859375
+        },
+        {
+            "order_id": "O012",
+            "plate_id": "P037",
+            "slab_id": "S012",
+            "required_length": 3.295454545454545
+        },
+        {
+            "order_id": "O012",
+            "plate_id": "P038",
+            "slab_id": "S010",
+            "required_length": 7.517045454545454
+        },
+        {
+            "order_id": "O012",
+            "plate_id": "P039",
+            "slab_id": "S012",
+            "required_length": 5.5227272727272725
+        },
+        {
+            "order_id": "O013",
+            "plate_id": "P040",
+            "slab_id": "S010",
+            "required_length": 2.352272727272727
+        },
+        {
+            "order_id": "O013",
+            "plate_id": "P041",
+            "slab_id": "S011",
+            "required_length": 3.5284090909090904
+        },
+        {
+            "order_id": "O013",
+            "plate_id": "P042",
+            "slab_id": "S021",
+            "required_length": 8.948863636363637
+        },
+        {
+            "order_id": "O013",
+            "plate_id": "P043",
+            "slab_id": "S011",
+            "required_length": 11.420454545454543
+        },
+        {
+            "order_id": "O014",
+            "plate_id": "P044",
+            "slab_id": "S018",
+            "required_length": 5.997340425531915
+        },
+        {
+            "order_id": "O014",
+            "plate_id": "P045",
+            "slab_id": "S025",
+            "required_length": 3.5106382978723403
+        },
+        {
+            "order_id": "O014",
+            "plate_id": "P046",
+            "slab_id": "S025",
+            "required_length": 5.2659574468085095
+        },
+        {
+            "order_id": "O014",
+            "plate_id": "P047",
+            "slab_id": "S018",
+            "required_length": 8.643617021276595
+        },
+        {
+            "order_id": "O015",
+            "plate_id": "P048",
+            "slab_id": "S020",
+            "required_length": 4.882978723404254
+        },
+        {
+            "order_id": "O015",
+            "plate_id": "P049",
+            "slab_id": "S020",
+            "required_length": 5.500000000000001
+        },
+        {
+            "order_id": "O015",
+            "plate_id": "P050",
+            "slab_id": "S006",
+            "required_length": 6.414893617021277
+        }
+    ],
+    "unallocated_orders": {
+        "O001": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P001",
+                "P002",
+                "P003",
+                "P004"
+            ]
+        },
+        "O002": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P005",
+                "P006",
+                "P007",
+                "P008",
+                "P009"
+            ]
+        },
+        "O003": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P010",
+                "P011",
+                "P012"
+            ]
+        },
+        "O005": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P016",
+                "P017",
+                "P018"
+            ]
+        }
+    }
+}
