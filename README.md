@@ -66,7 +66,7 @@ The default weights are:
 ```python
 fulfilment_weight = 0.4
 yield_loss_weight = 0.6
-
+```
 For orders requiring full fulfilment, all plates belonging to the order must be allocated for the order to be considered fulfilled.
 
 The optimisation objective balances:
@@ -105,6 +105,6 @@ Quality: Q1
 Supplier: SUP1
 Surface class: S1
 Status: Available
-
+```
 
 
