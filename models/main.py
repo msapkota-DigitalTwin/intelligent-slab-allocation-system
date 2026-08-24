@@ -6,8 +6,10 @@
 # The user need to provide:
 #   - order input file
 #   - slab inventory input file
-#   - allocation algorithm
+#   - allocation algorithm which can be either "greedy" or "SCIP/MIP"
 #   - objective weightages
+#   - time limit for the SCIP/MIP algorithm
+#   - output directory
 #
 # The system then:
 #   1. Loads the input data
@@ -37,7 +39,7 @@ if __name__ == "__main__":
     # User configuration
     # =========================================================
 
-    data_dir =  r"D:\Projects\slab-allocation-system\intelligent-slab-allocation-system\data"
+    data_dir =  "data"
 
     #slab_file = os.path.join(data_dir, "slab_inventory_input.xlsx")
     #slab_file_dir = os.path.join(data_dir, "slab_inventory_input_s30_p50.json")
@@ -58,7 +60,9 @@ if __name__ == "__main__":
     order_fulfilment_weight = 0.4    # can be between 0 and 1, with yield_loss_weight = 1 - fulfilment_weight
     yield_loss_minimisation_weight = 0.6   # can be between 0 and 1, with fulfilment_weight = 1 - yield_loss_weight
 
-    time_limit = 30
+    # time limit for optimisation algorithms, in seconds. If the algorithm does not finish within this time limit,
+    #  it will return the best solution found so far.
+    time_limit = 30   
 
 
     # =========================================================

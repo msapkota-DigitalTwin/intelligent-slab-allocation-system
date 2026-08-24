@@ -8,15 +8,15 @@
         "number_of_slabs": 40
     },
     "objective_weights": {
-        "fulfilment": 0.8,
-        "yield_loss": 0.2
+        "fulfilment": 0.4,
+        "yield_loss": 0.6
     },
     "kpis": {
         "material_consumption": 289.14923839458413,
         "yield_loss": 64.85076160541584,
         "slab_utilisation": 81.68057581767911,
         "order_fulfilment": 0.55,
-        "runtime_seconds": 0.0018125999995390885
+        "runtime_seconds": 0.0015399999974761158
     },
     "allocations": [
         {
@@ -285,23 +285,113 @@
         }
     ],
     "unallocated_orders": {
-        "O005": "Could not allocate plate P009: no compatible slab with sufficient remaining capacity",
-        "O010": "Could not allocate plate P020: no compatible slab with sufficient remaining capacity",
-        "O015": "Could not allocate plate P029: no compatible slab with sufficient remaining capacity",
-        "O020": "Could not allocate plate P040: no compatible slab with sufficient remaining capacity",
-        "O024": "Could not allocate plate P047: no compatible slab with sufficient remaining capacity",
-        "O025": "Could not allocate plate P049: no compatible slab with sufficient remaining capacity",
-        "O026": "Could not allocate plate P052: no compatible slab with sufficient remaining capacity",
-        "O028": "Could not allocate plate P055: no compatible slab with sufficient remaining capacity",
-        "O029": "Could not allocate plate P058: no compatible slab with sufficient remaining capacity",
-        "O030": "Could not allocate plate P060: no compatible slab with sufficient remaining capacity",
-        "O032": "Could not allocate plate P064: no compatible slab with sufficient remaining capacity",
-        "O034": "Could not allocate plate P067: no compatible slab with sufficient remaining capacity",
-        "O035": "Could not allocate plate P069: no compatible slab with sufficient remaining capacity",
-        "O036": "Could not allocate plate P072: no compatible slab with sufficient remaining capacity",
-        "O037": "Could not allocate plate P074: no compatible slab with sufficient remaining capacity",
-        "O038": "Could not allocate plate P075: no compatible slab with sufficient remaining capacity",
-        "O039": "Could not allocate plate P078: no compatible slab with sufficient remaining capacity",
-        "O040": "Could not allocate plate P080: no compatible slab with sufficient remaining capacity"
+        "O005": {
+            "reason": "Initial feasibility failure",
+            "affected_plates": {
+                "P009": "No compatible slab"
+            }
+        },
+        "O010": {
+            "reason": "Initial feasibility failure",
+            "affected_plates": {
+                "P020": "No compatible slab"
+            }
+        },
+        "O015": {
+            "reason": "Initial feasibility failure",
+            "affected_plates": {
+                "P029": "No compatible slab"
+            }
+        },
+        "O020": {
+            "reason": "Initial feasibility failure",
+            "affected_plates": {
+                "P040": "No compatible slab"
+            }
+        },
+        "O024": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P047"
+            ]
+        },
+        "O025": {
+            "reason": "Initial feasibility failure",
+            "affected_plates": {
+                "P049": "No compatible slab"
+            }
+        },
+        "O026": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P052"
+            ]
+        },
+        "O028": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P055"
+            ]
+        },
+        "O029": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P058"
+            ]
+        },
+        "O030": {
+            "reason": "Initial feasibility failure",
+            "affected_plates": {
+                "P060": "No compatible slab"
+            }
+        },
+        "O032": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P064"
+            ]
+        },
+        "O034": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P067"
+            ]
+        },
+        "O035": {
+            "reason": "Initial feasibility failure",
+            "affected_plates": {
+                "P069": "No compatible slab"
+            }
+        },
+        "O036": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P072"
+            ]
+        },
+        "O037": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P074"
+            ]
+        },
+        "O038": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P075"
+            ]
+        },
+        "O039": {
+            "reason": "Insufficient available slab length",
+            "affected_plates": [
+                "P078"
+            ]
+        },
+        "O040": {
+            "reason": "Initial feasibility failure",
+            "affected_plates": {
+                "P080": "No compatible slab"
+            }
+        }
     }
 }

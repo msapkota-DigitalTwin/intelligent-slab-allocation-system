@@ -1,8 +1,8 @@
 {
     "algorithm": "SCIP",
     "input": {
-        "order_file": "D:\\Projects\\slab-allocation-system\\intelligent-slab-allocation-system\\data\\orders_input_s40_p80.json",
-        "slab_file": "D:\\Projects\\slab-allocation-system\\intelligent-slab-allocation-system\\data\\slab_inventory_input_s40_p80.json",
+        "order_file": "data\\orders_input_s40_p80.json",
+        "slab_file": "data\\slab_inventory_input_s40_p80.json",
         "number_of_orders": 40,
         "number_of_plates": 80,
         "number_of_slabs": 40
@@ -16,7 +16,7 @@
         "yield_loss": 26.58818907156673,
         "slab_utilisation": 92.17994439071568,
         "order_fulfilment": 0.625,
-        "runtime_seconds": 5.010965199995553
+        "runtime_seconds": 4.676355999996304
     },
     "allocations": [
         {

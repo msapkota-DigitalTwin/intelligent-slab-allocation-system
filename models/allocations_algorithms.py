@@ -120,13 +120,13 @@ def greedy_heuristic_allocate(slabs, orders):
             continue
 
         # -----------------------------------------------------
-        # Temporary allocations for the current order.
+        # Pseudo allocations for the current order.
         #
         # These allocations are committed only if every plate
         # in the order can be allocated.
         # -----------------------------------------------------
 
-        temporary_allocations = []
+        allocations_temp = []
 
         order_failed = False
         failed_plates = []
@@ -173,7 +173,7 @@ def greedy_heuristic_allocate(slabs, orders):
 
                 temporary_usage = sum(
                     allocation.required_length
-                    for allocation in temporary_allocations
+                    for allocation in allocations_temp  
                     if allocation.slab.slab_id == slab_id
                 )
 
@@ -242,7 +242,7 @@ def greedy_heuristic_allocate(slabs, orders):
                 feasible_candidates[0]
             )
 
-            temporary_allocations.append(
+            allocations_temp.append(
                 Allocation(
                     selected_slab,
                     plate,
@@ -268,11 +268,11 @@ def greedy_heuristic_allocate(slabs, orders):
             }
 
             # -------------------------------------------------
-            # Discard all temporary allocations belonging to
+            # Discard all pseudo allocations belonging to
             # this incomplete order.
             # -------------------------------------------------
 
-            temporary_allocations = []
+            allocations_temp = []
 
             continue
 
@@ -281,7 +281,7 @@ def greedy_heuristic_allocate(slabs, orders):
         # =====================================================
 
         allocations.extend(
-            temporary_allocations
+            allocations_temp
         )
 
     # =========================================================
@@ -292,7 +292,6 @@ def greedy_heuristic_allocate(slabs, orders):
         allocations,
         unallocated_orders
     )
-
 
 
 

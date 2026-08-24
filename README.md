@@ -31,7 +31,7 @@ L_{p,s} =
 
 ```
 
-The above calculation uses a configurable slab cross-section constant:
+The above calculation uses, plates length, breadth, thickness, a configurable slab cross-section constant:
 
 ```python
 SLAB_CROSS_SECTION_CONSTANT = 0.04
@@ -76,7 +76,7 @@ y_o =
 
 No partial fulfillment is allowrd, i.e.,, either all plates belonging to the order must be allocated or none..
 
-For the optimisation problem, the objective function is formulated in a way it balances order fulfilment and yield-loss minimisation:
+For the optimisation problem, the objective function is formulated in a way it considers the KPIs such as order fulfilment and yield-loss minimisation:
 
 ```math
 \max(w_f * F - w_y* Y)
@@ -85,11 +85,11 @@ For the optimisation problem, the objective function is formulated in a way it b
 where:
 
 - \(F\) = order fulfilment ratio;
-- \(Y\) = normalised yield loss;
+- \(Y\) = yield loss ratio;
 - \(w_f\) = order fulfilment weight;
 - \(w_y\) = yield-loss minimisation weight.
 
-The user can choose this value, while the default weights are:
+The two objective components are combined with user-defined weights for normalisation. The user can choose this value, baed upon the priority. The default weights are:
 
 ```python
 order_fulfilment_weight = 0.4
@@ -97,13 +97,23 @@ yield_loss_minimisation_weight = 0.6
 ```
 
 
+### Yield-Loss Calculation
 
-The optimisation objective balances:
+```math
+\text{Yield Loss} = \text{Total Slab Length Used} - \text{Material Consumption}
+\text{Yield Loss Ratio} = \text{Yield Loss}/\text{Total Slab Length Used} 
+```
 
-- order fulfilment;
-- slab yield loss.
+### order fulfilment ratio
 
-The two objective components are normalised and combined using user-defined weights.
+```math
+\text{order fulfilment ratio} = \text{Order Fulfilled}/\text{Number of Total Orders}
+```
+
+The optimisation objective balances 2 core industrial requirements:
+
+- maximum order fulfilment;
+- minimising slab yield loss.
 
 ---
 
@@ -112,7 +122,7 @@ The two objective components are normalised and combined using user-defined weig
 The following assumptions apply for the allocation phase:
 
 - A slab can be allocated to multiple plates, provided that the total required length does not exceed its available length.
-- Unused length from an opened slab is counted as yield loss.
+- Unused length from a used slab is counted as yield loss, while unused slabs won't be considered.
 - Reserved slabs are unavailable for the current allocation.
 - Incoming slabs are unavailable until their specified availability date.
 - Steel grade, quality, supplier, and surface-class restrictions are treated as hard compatibility constraints.
@@ -258,13 +268,6 @@ The same key performance indicators (KPIs) are calculated for both allocation al
 - Order fulfilment
 - Runtime
 
-### Yield-Loss Calculation
-
-```math
-\text{Yield Loss} = \text{Total Slab Length Used} - \text{Material Consumption}
-\text{Yield Loss Ratio} = \text{Yield Loss}/\text{Total Slab Length Used} 
-```
-
 This provides a consistent basis for comparing the Greedy and SCIP approaches.
 
 ---
@@ -332,10 +335,17 @@ Example configuration in `main.py`:
 order_file_dir = "data/orders_input_s30_p50.xlsx"
 slab_file_dir = "data/slab_inventory_input_s30_p50.xlsx"
 
-allocation_algorithm_type = "SCIP"
+output_dir = "output"
+
+allocation_algorithm_type = "SCIP" 
+#allocation_algorithm_type = "greedy"
 
 fulfilment_weight = 0.4
 yield_loss_weight = 0.6
+
+# time limit for optimisation algorithms, in seconds. If the algorithm does not finish within this time limit,
+# it will return the best solution found so far.
+time_limit = 30   
 ```
 
 ### Run the Application
@@ -344,7 +354,7 @@ yield_loss_weight = 0.6
 python models/main.py
 ```
 
-The system prints allocation results and KPIs, then generates a JSON output file containing:
+The systemrun the allocation problem as per the selected algorithm type and prints allocation results and KPIs, then generates a JSON output file containing:
 
 - Selected allocations
 - Unallocated-order information
@@ -466,7 +476,7 @@ could affect feasibility analysis or KPI calculations. Such as,
 - orders containing zero plates;
 - zero or invalid slab dimensions;
 - zero denominators in KPI calculations;
-- invalid or missing objective weights;
+- invalid (not summing to 1) or missing objective weights;
 - optimisation models with no feasible solution;
 - solver errors or unexpected termination.
 
